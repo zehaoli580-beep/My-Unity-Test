@@ -1,31 +1,50 @@
-# Unity
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-[Uu]ser[Ss]ettings/
-[Uu]serSettings/
+# This .gitignore file should be placed at the root of your Unity project directory
+#
+# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+#
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+.utmp/
+
+*.log
+*.blend1
+*.blend1.meta
 *.csproj
+*.unityproj
 *.sln
 *.slnx
+*.suo
+*.tmp
 *.user
 *.userprefs
-*.unityproj
 *.pidb
 *.booproj
 *.svd
 *.pdb
 *.mdb
-*.suo
-*.cache
-*.orig
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
 
 # VS
 .vs/
-*.VC.db
+*.DotSettings.user
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+*.app
