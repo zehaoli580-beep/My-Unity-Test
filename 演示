@@ -1,0 +1,85 @@
+//③ 核心代码
+//地刺陷阱——trap1.cs：
+
+
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("Player"))
+    {
+        player playerScript = other.GetComponent<player>();
+        if (playerScript != null) playerScript.TakeDamage();
+    }
+}
+//移动陷阱——trap move.cs：
+
+
+private void Update()
+{
+    transform.position = Vector3.MoveTowards(
+        transform.position, targetPosition, moveSpeed * Time.deltaTime
+    );
+    if (transform.position == pointB.position) targetPosition = pointA.position;
+    else if (transform.position == pointA.position) targetPosition = pointB.position;
+}
+//移动平台——move island.cs：
+
+
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("Player")) other.transform.SetParent(transform);
+}
+private void OnTriggerExit2D(Collider2D other)
+{
+    if (other.CompareTag("Player")) other.transform.SetParent(null);
+}
+//旋转障碍物——rotate.cs：
+
+
+private void Update()
+{
+    transform.Rotate(0, 0, 360 * rotateSpeed * Time.deltaTime);
+}
+//掉落机关——DROP.cs：
+
+
+public void TriggerFly()
+{
+    if (isFlying) return;
+    isFlying = true;
+    rb.bodyType = RigidbodyType2D.Dynamic;
+    rb.gravityScale = 0;
+    Vector2 forceVector = direction switch
+    {
+        FlyDirection.Up => Vector2.up, FlyDirection.Down => Vector2.down,
+        FlyDirection.Left => Vector2.left, FlyDirection.Right => Vector2.right,
+    };
+    rb.linearVelocity = forceVector * flyForce;
+    Destroy(gameObject, destroyDelay);
+}
+//弹簧——Trampoline.cs：
+
+
+private void OnCollisionEnter2D(Collision2D collision)
+{
+    if (collision.gameObject.CompareTag("Player"))
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
+            if (contact.normal.y < -0.5f) { ActivateTrampoline(collision.gameObject); break; }
+    }
+}
+private void ActivateTrampoline(GameObject playerObj)
+{
+    Rigidbody2D rb = playerObj.GetComponent<Rigidbody2D>();
+    float launchVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics2D.gravity.y * rb.gravityScale) * jumpHeight);
+    rb.linearVelocity = new Vector2(rb.linearVelocity.x, launchVelocity);
+}
+/*总结：
+
+机关类型	核心机制
+地刺陷阱	OnTriggerEnter2D 触发受伤
+移动陷阱	Vector3.MoveTowards 两点巡逻
+移动平台	SetParent 父子关系跟随
+旋转障碍	transform.Rotate 持续旋转
+掉落机关	Rigidbody2D.linearVelocity 物理飞出
+弹簧	v = √(2gh) 物理公式弹射
+*/
